@@ -1,0 +1,23 @@
+.jochem-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #f7faff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(33, 150, 243, 0.07);
+}
+
+.jochem-image {
+  width: 220px;
+  height: auto;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.jochem-info h3 {
+  margin: 10px 0;
+  color: #1976d2;
+}

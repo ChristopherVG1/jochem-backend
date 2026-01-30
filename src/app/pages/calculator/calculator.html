@@ -1,0 +1,124 @@
+<div class="calculator-container">
+  <h1>Steengewicht Calculator</h1>
+  <p class="subtitle">Bereken hoeveel stenen je nodig hebt om te zinken</p>
+
+  <!-- Input Screen -->
+  <div class="input-screen" *ngIf="!hasStarted">
+    <div class="input-card">
+      <label for="weight">Wat is je gewicht? (kg)</label>
+      <input
+        type="number"
+        id="weight"
+        [(ngModel)]="userWeight"
+        placeholder="Bijv. 70"
+        min="1"
+        (keyup.enter)="startCalculation()"
+      />
+      <button
+        class="start-button"
+        (click)="startCalculation()"
+        [disabled]="!userWeight || userWeight <= 0">
+        Start Calculator
+      </button>
+    </div>
+  </div>
+
+  <!-- Calculator Screen -->
+  <div class="calculator-screen" *ngIf="hasStarted && !hasSucceeded">
+    <div class="info-panel">
+      <div class="info-item">
+        <span class="label">Je gewicht:</span>
+        <span class="value">{{ userWeight }} kg</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Totaal steengewicht:</span>
+        <span class="value">{{ totalRockWeight.toFixed(2) }} kg</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Nog nodig:</span>
+        <span class="value highlight">{{ remainingWeight.toFixed(2) }} kg</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Aantal stenen:</span>
+        <span class="value">{{ rocks.length }}</span>
+      </div>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progressPercentage"></div>
+      </div>
+      <span class="progress-text">{{ progressPercentage.toFixed(0) }}%</span>
+    </div>
+
+    <div class="backpack-container">
+      <div class="backpack">
+        <div class="backpack-body">
+          <div class="backpack-straps"></div>
+          <div class="backpack-pocket"></div>
+
+          <!-- Rocks inside backpack -->
+          <div
+            class="rock"
+            *ngFor="let rock of rocks"
+            [style.left.%]="rock.x"
+            [style.top.%]="rock.y"
+            [style.transform]="'rotate(' + rock.rotation + 'deg)'">
+            🪨
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="control-button add-button" (click)="addRock()">
+        ➕ Steen Toevoegen ({{ ROCK_WEIGHT }} kg)
+      </button>
+      <button class="control-button remove-button" (click)="removeRock()" [disabled]="rocks.length === 0">
+        ➖ Steen Verwijderen
+      </button>
+      <button class="control-button reset-button" (click)="reset()">
+        🔄 Opnieuw
+      </button>
+    </div>
+  </div>
+
+  <!-- Success Screen -->
+  <div class="success-screen" *ngIf="hasSucceeded">
+    <div class="success-content">
+      <div class="success-icon">✅</div>
+      <h2>Je bent geslaagd!</h2>
+      <p>Je hebt genoeg stenen verzameld om te zinken.</p>
+
+      <div class="success-stats">
+        <div class="stat">
+          <span class="stat-label">Je gewicht</span>
+          <span class="stat-value">{{ userWeight }} kg</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Steengewicht</span>
+          <span class="stat-value">{{ totalRockWeight.toFixed(2) }} kg</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Aantal stenen</span>
+          <span class="stat-value">{{ rocks.length }}</span>
+        </div>
+      </div>
+
+      <div class="sinking-backpack">
+        <div class="backpack-small">
+          <div
+            class="rock-small"
+            *ngFor="let rock of rocks">
+            🪨
+          </div>
+        </div>
+        <div class="water-waves">🌊🌊🌊</div>
+      </div>
+
+      <button class="restart-button" (click)="reset()">
+        Opnieuw Proberen
+      </button>
+    </div>
+  </div>
+</div>

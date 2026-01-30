@@ -1,0 +1,53 @@
+<div class="quiz-container">
+  <!-- Start Screen -->
+  <div class="start-screen" *ngIf="!quizStarted && !quizFinished">
+    <h1>Wie ben ik?</h1>
+    <p>Ontdek welk personage je bent uit Spijt!</p>
+    <button class="start-button" (click)="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Questions -->
+  <div class="quiz-screen" *ngIf="quizStarted && !quizFinished">
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="progress"></div>
+    </div>
+
+    <div class="question-counter">
+      Vraag {{ currentQuestionIndex + 1 }} van {{ questions.length }}
+    </div>
+
+    <div class="question-card">
+      <h2>{{ currentQuestion.question }}</h2>
+
+      <div class="answers">
+        <button
+          class="answer-button"
+          *ngFor="let answer of currentQuestion.answers"
+          (click)="selectAnswer(answer)">
+          {{ answer }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Screen -->
+  <div class="result-screen" *ngIf="quizFinished">
+    <h1>Je bent:</h1>
+
+    <div class="result-content">
+      <img [src]="resultImage" [alt]="result" class="result-image" />
+      <div class="result-name">{{ result }}</div>
+    </div>
+
+    <p class="result-description" *ngIf="result === 'Jochem'">
+      Je bent Jochem! Je bent misschien wat zwaarder, maar je hebt een goed hart.
+    </p>
+    <p class="result-description" *ngIf="result === 'David'">
+      Je bent David! Je bent vaak boos en hebt een kort lontje.
+    </p>
+    <p class="result-description" *ngIf="result === 'Vera'">
+      Je bent Vera! Jochem heeft een crush op je!
+    </p>
+    <button class="restart-button" (click)="restartQuiz()">Opnieuw Proberen</button>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="gallery-container">
+  <h2>Galerij met prachtige foto's van onze fijne jongen!</h2>
+
+  <div class="gallery-grid">
+    <div class="gallery-item" *ngFor="let image of images" (click)="openImage(image.src)">
+      <img [src]="image.src" [alt]="image.alt" />
+    </div>
+  </div>
+
+  <div class="lightbox" *ngIf="selectedImage" (click)="closeImage()">
+    <div class="lightbox-content" (click)="$event.stopPropagation()">
+      <span class="close-button" (click)="closeImage()">&times;</span>
+      <img [src]="selectedImage" alt="Enlarged view" />
+    </div>
+  </div>
+</div>

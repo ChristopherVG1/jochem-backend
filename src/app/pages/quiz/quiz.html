@@ -24,7 +24,7 @@
           class="answer-button"
           *ngFor="let answer of currentQuestion.answers"
           (click)="selectAnswer(answer)">
-          {{ answer }}
+          {{ answer.text }}
         </button>
       </div>
     </div>
@@ -39,15 +39,51 @@
       <div class="result-name">{{ result }}</div>
     </div>
 
-    <p class="result-description" *ngIf="result === 'Jochem'">
-      Je bent Jochem! Je bent misschien wat zwaarder, maar je hebt een goed hart.
+    <p class="result-description">
+      {{ getCharacterDescription(result) }}
     </p>
-    <p class="result-description" *ngIf="result === 'David'">
-      Je bent David! Je bent vaak boos en hebt een kort lontje.
-    </p>
-    <p class="result-description" *ngIf="result === 'Vera'">
-      Je bent Vera! Jochem heeft een crush op je!
-    </p>
-    <button class="restart-button" (click)="restartQuiz()">Opnieuw Proberen</button>
+
+    <!-- Score Breakdown -->
+    <div class="score-breakdown">
+      <h2>Score Overzicht</h2>
+
+      <div class="all-scores">
+        <div
+          class="character-score"
+          *ngFor="let score of sortedScores"
+          [class.winner]="score.name === result">
+          <div class="character-header">
+            <span class="character-name">{{ score.name }}</span>
+            <span class="character-total">{{ score.totalPoints }} punten</span>
+          </div>
+          <div class="score-bar">
+            <div
+              class="score-fill"
+              [style.width.%]="(score.totalPoints / sortedScores[0].totalPoints) * 100">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question by Question Breakdown -->
+      <details class="question-breakdown">
+        <summary>Bekijk punten per vraag</summary>
+        <div class="breakdown-content">
+          <div class="question-score" *ngFor="let question of questions; let i = index">
+            <h3>{{ question.question }}</h3>
+            <div class="question-scores">
+              <div
+                class="char-question-score"
+                *ngFor="let character of getCharactersWithPointsForQuestion(i)">
+                <span class="char-name">{{ character }}:</span>
+                <span class="char-points">+{{ scores[character].pointsPerQuestion[i] }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <button class="restart-button" (click)="restartQuiz()">Opnieuw Proberen</button>
   </div>
+</div>
 </div>

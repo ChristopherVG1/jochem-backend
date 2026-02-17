@@ -21,3 +21,18 @@
   margin: 10px 0;
   color: #1976d2;
 }
+
+@media (max-width: 768px) {
+  .jochem-container {
+    flex-direction: column;
+    margin: 20px 16px;
+    padding: 20px 16px;
+    gap: 20px;
+  }
+
+  .jochem-image {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+

@@ -1,0 +1,178 @@
+.fanpage-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px 100px; /* extra bottom padding for fixed footer */
+}
+
+.fanpage-container h1 {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.post-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.post-character {
+  font-size: 1.4rem;
+  margin: 0;
+  color: #1976d2;
+}
+
+.post-date {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.post-content {
+  margin: 0;
+  color: #444;
+  line-height: 1.5;
+}
+
+.post-footer {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.post-author {
+  font-style: italic;
+}
+
+/* Mobile tweaks */
+@media (max-width: 600px) {
+  .fanpage-container {
+    padding: 24px 16px 100px;
+  }
+
+  .post-card {
+    padding: 16px 18px;
+  }
+}
+
+.contact-section {
+  margin-bottom: 40px; /* Changed from margin-top: 50px */
+  padding: 30px;
+  background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.1);
+}
+
+
+.contact-section h2 {
+  font-size: 1.8rem;
+  color: #1976d2;
+  margin-bottom: 12px;
+}
+
+.contact-section p {
+  color: #666;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+}
+
+.email-link {
+  display: inline-block;
+  color: #1976d2;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 12px 24px;
+  border: 2px solid #1976d2;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+.email-link:hover {
+  background-color: #1976d2;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.3);
+}
+
+@media (max-width: 600px) {
+  .contact-section {
+    padding: 24px 16px;
+  }
+
+  .email-link {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fanpage-container {
+    padding: 24px 16px 80px;
+  }
+
+  .fanpage-container h1 {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .posts-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .post-card {
+    padding: 16px 18px;
+  }
+
+  .post-character {
+    font-size: 1.2rem;
+  }
+
+  .contact-section {
+    padding: 20px 16px;
+  }
+
+  .contact-section h2 {
+    font-size: 1.4rem;
+  }
+
+  .contact-section p {
+    font-size: 1rem;
+  }
+
+  .email-link {
+    font-size: 0.95rem;
+    padding: 10px 20px;
+    word-break: break-all;
+  }
+}
+
+

@@ -30,3 +30,21 @@
   margin-top: 30px;
   color: #2196f3;
 }
+
+@media (max-width: 768px) {
+  .home-container {
+    margin: 20px 16px;
+    padding: 20px 16px;
+  }
+
+  .home-main-flex {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .home-image {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+

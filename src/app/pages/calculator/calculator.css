@@ -427,3 +427,79 @@
     width: 100%;
   }
 }
+
+@media (max-width: 768px) {
+  .calculator-container {
+    padding: 24px 16px 80px;
+  }
+
+  .calculator-container h1 {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .input-card {
+    padding: 24px 20px;
+  }
+
+  .info-panel {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .backpack {
+    width: 220px;
+    height: 320px;
+  }
+
+  .rock {
+    font-size: 1.3rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .control-button {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .success-content {
+    padding: 24px 20px;
+  }
+
+  .success-content h2 {
+    font-size: 2rem;
+  }
+
+  .success-stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .restart-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .calculator-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .backpack {
+    width: 180px;
+    height: 280px;
+  }
+
+  .rock {
+    font-size: 1rem;
+  }
+}
+

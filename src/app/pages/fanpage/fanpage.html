@@ -1,0 +1,32 @@
+<div class="fanpage-container">
+  <h1>Spijt! Fanpage</h1>
+  <p class="subtitle">Lees wat andere fans zeggen over hun favoriete personages.</p>
+
+  <!-- Contact Section - Now at the top -->
+  <div class="contact-section">
+    <h2>Stuur jouw fanmail!</h2>
+    <p>Wil je jouw eigen verhaal of reactie delen over Spijt!? Mail ons op:</p>
+    <a href="mailto:jochemvanspijt@gmail.com" class="email-link">
+      jochemvanspijt@hotmail.com
+    </a>
+  </div>
+
+  <div class="posts-grid">
+    <article class="post-card" *ngFor="let post of posts">
+      <header class="post-header">
+        <h2 class="post-character">{{ post.character }}</h2>
+        <span class="post-date">
+          {{ post.date | date:'dd-MM-yyyy' }}
+        </span>
+      </header>
+
+      <p class="post-content">
+        {{ post.content }}
+      </p>
+
+      <footer class="post-footer">
+        <span class="post-author">Door {{ post.author }}</span>
+      </footer>
+    </article>
+  </div>
+</div>

@@ -2,123 +2,311 @@
   <h1>Steengewicht Calculator</h1>
   <p class="subtitle">Bereken hoeveel stenen je nodig hebt om te zinken</p>
 
-  <!-- Input Screen -->
-  <div class="input-screen" *ngIf="!hasStarted">
-    <div class="input-card">
-      <label for="weight">Wat is je gewicht? (kg)</label>
-      <input
-        type="number"
-        id="weight"
-        [(ngModel)]="userWeight"
-        placeholder="Bijv. 70"
-        min="1"
-        (keyup.enter)="startCalculation()"
-      />
-      <button
-        class="start-button"
-        (click)="startCalculation()"
-        [disabled]="!userWeight || userWeight <= 0">
-        Start Calculator
+  <!-- Step Indicator -->
+  <div class="step-indicator" *ngIf="currentStep !== 'result'">
+    <div class="step-item"
+         [class.active]="currentStep === 'weight'"
+         [class.done]="isStepDone('weight')">
+      <div class="step-circle">{{ isStepDone('weight') ? '✓' : '1' }}</div>
+      <span>Gewicht</span>
+    </div>
+    <div class="step-line" [class.done]="isStepDone('fatPercentage')"></div>
+    <div class="step-item"
+         [class.active]="currentStep === 'fatPercentage'"
+         [class.done]="isStepDone('fatPercentage')">
+      <div class="step-circle">{{ isStepDone('fatPercentage') ? '✓' : '2' }}</div>
+      <span>Vet %</span>
+    </div>
+    <div class="step-line" [class.done]="isStepDone('muscleMass')"></div>
+    <div class="step-item"
+         [class.active]="currentStep === 'muscleMass' || currentStep === 'muscleEstimate'"
+         [class.done]="isStepDone('muscleMass')">
+      <div class="step-circle">{{ isStepDone('muscleMass') ? '✓' : '3' }}</div>
+      <span>Spier</span>
+    </div>
+    <div class="step-line" [class.done]="isStepDone('rockWeight')"></div>
+    <div class="step-item"
+         [class.active]="currentStep === 'rockWeight'"
+         [class.done]="isStepDone('rockWeight')">
+      <div class="step-circle">{{ isStepDone('rockWeight') ? '✓' : '4' }}</div>
+      <span>Steen</span>
+    </div>
+  </div>
+
+  <!-- Step 1: Weight -->
+  <div class="step-card" *ngIf="currentStep === 'weight'">
+    <div class="step-emoji">⚖️</div>
+    <h2>Wat is je lichaamsgewicht?</h2>
+    <div class="input-group">
+      <input type="number" [(ngModel)]="userWeight"
+             placeholder="75" min="1" max="300"
+             (keyup.enter)="nextFromWeight()" />
+      <span class="unit">kg</span>
+    </div>
+    <div class="button-row single">
+      <button class="primary-button"
+              (click)="nextFromWeight()"
+              [disabled]="!userWeight || userWeight <= 0">
+        Volgende →
       </button>
     </div>
   </div>
 
-  <!-- Calculator Screen -->
-  <div class="calculator-screen" *ngIf="hasStarted && !hasSucceeded">
-    <div class="info-panel">
-      <div class="info-item">
-        <span class="label">Je gewicht:</span>
-        <span class="value">{{ userWeight }} kg</span>
-      </div>
-      <div class="info-item">
-        <span class="label">Totaal steengewicht:</span>
-        <span class="value">{{ totalRockWeight.toFixed(2) }} kg</span>
-      </div>
-      <div class="info-item">
-        <span class="label">Nog nodig:</span>
-        <span class="value highlight">{{ remainingWeight.toFixed(2) }} kg</span>
-      </div>
-      <div class="info-item">
-        <span class="label">Aantal stenen:</span>
-        <span class="value">{{ rocks.length }}</span>
-      </div>
+  <!-- Step 2: Fat percentage -->
+  <div class="step-card" *ngIf="currentStep === 'fatPercentage'">
+    <div class="step-emoji">🧈</div>
+    <h2>Wat is je vetpercentage?</h2>
+    <p class="hint">Gemiddeld 15–25% voor mannen, 20–35% voor vrouwen</p>
+    <div class="input-group">
+      <input type="number" [(ngModel)]="fatPercentage"
+             placeholder="20" min="1" max="80"
+             (keyup.enter)="nextFromFat()" />
+      <span class="unit">%</span>
     </div>
-
-    <div class="progress-container">
-      <div class="progress-bar">
-        <div class="progress-fill" [style.width.%]="progressPercentage"></div>
-      </div>
-      <span class="progress-text">{{ progressPercentage.toFixed(0) }}%</span>
-    </div>
-
-    <div class="backpack-container">
-      <div class="backpack">
-        <div class="backpack-body">
-          <div class="backpack-straps"></div>
-          <div class="backpack-pocket"></div>
-
-          <!-- Rocks inside backpack -->
-          <div
-            class="rock"
-            *ngFor="let rock of rocks"
-            [style.left.%]="rock.x"
-            [style.top.%]="rock.y"
-            [style.transform]="'rotate(' + rock.rotation + 'deg)'">
-            🪨
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="controls">
-      <button class="control-button add-button" (click)="addRock()">
-        ➕ Steen Toevoegen ({{ ROCK_WEIGHT }} kg)
-      </button>
-      <button class="control-button remove-button" (click)="removeRock()" [disabled]="rocks.length === 0">
-        ➖ Steen Verwijderen
-      </button>
-      <button class="control-button reset-button" (click)="reset()">
-        🔄 Opnieuw
+    <div class="button-row">
+      <button class="secondary-button" (click)="goToStep('weight')">← Terug</button>
+      <button class="primary-button"
+              (click)="nextFromFat()"
+              [disabled]="fatPercentage === null || fatPercentage < 1 || fatPercentage >= 100">
+        Volgende →
       </button>
     </div>
   </div>
 
-  <!-- Success Screen -->
-  <div class="success-screen" *ngIf="hasSucceeded">
-    <div class="success-content">
-      <div class="success-icon">✅</div>
-      <h2>Je bent geslaagd!</h2>
-      <p>Je hebt genoeg stenen verzameld om te zinken.</p>
+  <!-- Step 3a: Muscle mass — known or estimate? -->
+  <div class="step-card" *ngIf="currentStep === 'muscleMass'">
+    <div class="step-emoji">💪</div>
+    <h2>Hoeveel spiermassa heb je?</h2>
 
-      <div class="success-stats">
-        <div class="stat">
-          <span class="stat-label">Je gewicht</span>
-          <span class="stat-value">{{ userWeight }} kg</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Steengewicht</span>
-          <span class="stat-value">{{ totalRockWeight.toFixed(2) }} kg</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Aantal stenen</span>
-          <span class="stat-value">{{ rocks.length }}</span>
-        </div>
-      </div>
-
-      <div class="sinking-backpack">
-        <div class="backpack-small">
-          <div
-            class="rock-small"
-            *ngFor="let rock of rocks">
-            🪨
-          </div>
-        </div>
-        <div class="water-waves">🌊🌊🌊</div>
-      </div>
-
-      <button class="restart-button" (click)="reset()">
-        Opnieuw Proberen
+    <!-- Choice buttons when not yet chosen -->
+    <div class="choice-group" *ngIf="muscleMassKnown === null">
+      <button class="choice-button" (click)="selectMuscleMassKnown(true)">
+        <span class="choice-icon">📏</span>
+        <strong>Ik weet het</strong>
+        <small>Voer je spiermassa in kg in</small>
+      </button>
+      <button class="choice-button" (click)="selectMuscleMassKnown(false)">
+        <span class="choice-icon">📊</span>
+        <strong>Schat voor mij</strong>
+        <small>Op basis van geslacht en leeftijd</small>
       </button>
     </div>
+
+    <!-- Input when user knows -->
+    <div *ngIf="muscleMassKnown === true">
+      <div class="input-group">
+        <input type="number" [(ngModel)]="muscleMass"
+               placeholder="30" min="1"
+               (keyup.enter)="nextFromMuscleMass()" />
+        <span class="unit">kg</span>
+      </div>
+      <p class="error-hint" *ngIf="muscleMassError">⚠️ {{ muscleMassError }}</p>
+      <div class="button-row">
+        <button class="secondary-button" (click)="muscleMassKnown = null">← Terug</button>
+        <button class="primary-button"
+                (click)="nextFromMuscleMass()"
+                [disabled]="!muscleMass || muscleMass <= 0 || !!muscleMassError">
+          Volgende →
+        </button>
+      </div>
+    </div>
+
+    <div class="button-row single" *ngIf="muscleMassKnown === null">
+      <button class="secondary-button" (click)="goToStep('fatPercentage')">← Terug</button>
+    </div>
+  </div>
+
+  <!-- Step 3b: Muscle estimate -->
+  <div class="step-card" *ngIf="currentStep === 'muscleEstimate'">
+    <div class="step-emoji">📊</div>
+    <h2>Even een schatting maken</h2>
+    <p class="hint">De schatting is gebaseerd op gemiddelden uit DEXA-scan onderzoek</p>
+
+    <div class="estimate-block">
+      <label>Geslacht</label>
+      <div class="toggle-group">
+        <button [class.selected]="gender === 'male'" (click)="gender = 'male'">👨 Man</button>
+        <button [class.selected]="gender === 'female'" (click)="gender = 'female'">👩 Vrouw</button>
+      </div>
+    </div>
+
+    <div class="estimate-block">
+      <label>Leeftijdscategorie</label>
+      <div class="toggle-group">
+        <button [class.selected]="ageGroup === 'young'" (click)="ageGroup = 'young'">Jong (&lt;30)</button>
+        <button [class.selected]="ageGroup === 'adult'" (click)="ageGroup = 'adult'">Volwassen (30–60)</button>
+        <button [class.selected]="ageGroup === 'old'" (click)="ageGroup = 'old'">Ouder (&gt;60)</button>
+      </div>
+    </div>
+
+    <div class="estimate-preview" *ngIf="gender && ageGroup">
+      Geschatte spiermassa: <strong>{{ getEstimatedMuscle().toFixed(1) }} kg</strong>
+    </div>
+
+    <div class="button-row">
+      <button class="secondary-button" (click)="goToStep('muscleMass'); muscleMassKnown = null">← Terug</button>
+      <button class="primary-button"
+              (click)="nextFromMuscleEstimate()"
+              [disabled]="!gender || !ageGroup">
+        Volgende →
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 4: Rock weight -->
+  <div class="step-card" *ngIf="currentStep === 'rockWeight'">
+    <div class="step-emoji">🪨</div>
+    <h2>Hoe zwaar is jouw steen?</h2>
+    <p class="hint">Een standaard baksteen weegt ongeveer 2–3 kg</p>
+    <div class="input-group">
+      <input type="number" [(ngModel)]="rockWeight"
+             placeholder="2.5" min="0.1" step="0.1"
+             (keyup.enter)="nextFromRockWeight()" />
+      <span class="unit">kg</span>
+    </div>
+    <div class="button-row">
+      <button class="secondary-button" (click)="goToStep('muscleMass')">← Terug</button>
+      <button class="primary-button"
+              (click)="nextFromRockWeight()"
+              [disabled]="!rockWeight || rockWeight <= 0">
+        Bereken 🔬
+      </button>
+    </div>
+  </div>
+
+  <!-- Result Screen -->
+  <div class="result-screen" *ngIf="currentStep === 'result' && result">
+
+    <div class="result-banner" [class.already-sinks]="!result.floatsAlone" [class.needs-rocks]="result.floatsAlone">
+      <div class="banner-emoji" *ngIf="!result.floatsAlone">⚠️</div>
+      <div class="banner-emoji" *ngIf="result.floatsAlone">🪨</div>
+      <div>
+        <h2 *ngIf="!result.floatsAlone">Je zinkt al zonder stenen!</h2>
+        <h2 *ngIf="result.floatsAlone">
+          Je hebt <strong>{{ result.rocksNeeded }}</strong>
+          steen{{ result.rocksNeeded !== 1 ? 'en' : '' }} nodig
+        </h2>
+        <p *ngIf="!result.floatsAlone">
+          Je lichaamsdichtheid ({{ result.bodyDensity.toFixed(3) }} kg/L) is al groter dan water.
+        </p>
+        <p *ngIf="result.floatsAlone">
+          Met {{ result.rocksNeeded }} × {{ rockWeight }} kg steen
+          ({{ (result.rocksNeeded * rockWeight!).toFixed(1) }} kg totaal) zink je.
+        </p>
+      </div>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Lichaamsvolume</span>
+        <span class="stat-value">{{ result.bodyVolume.toFixed(2) }} L</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Lichaamsdichtheid</span>
+        <span class="stat-value">{{ result.bodyDensity.toFixed(3) }} kg/L</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Drijft alleen</span>
+        <span class="stat-value" [class.value-yes]="result.floatsAlone" [class.value-no]="!result.floatsAlone">
+          {{ result.floatsAlone ? 'Ja' : 'Nee' }}
+        </span>
+      </div>
+      <div class="stat-card" *ngIf="result.floatsAlone">
+        <span class="stat-label">Stenen nodig</span>
+        <span class="stat-value value-highlight">{{ result.rocksNeeded }}×</span>
+      </div>
+    </div>
+
+    <!-- Math breakdown -->
+    <div class="math-section">
+      <h3>🧮 De Berekening</h3>
+
+      <div class="math-block">
+        <h4>Stap 1 — Lichaamssamenstelling</h4>
+        <p class="math-desc">
+          Volume per component = massa ÷ dichtheid
+        </p>
+        <div class="math-table">
+          <div class="math-row math-header">
+            <span>Component</span><span>Massa</span><span>Dichtheid</span><span>Volume</span>
+          </div>
+          <div class="math-row">
+            <span>🧈 Vet</span>
+            <span>{{ result.fatMass.toFixed(2) }} kg</span>
+            <span>0.9 kg/L</span>
+            <span>{{ result.fatVolume.toFixed(2) }} L</span>
+          </div>
+          <div class="math-row">
+            <span>💪 Spier</span>
+            <span>{{ result.muscleMass.toFixed(2) }} kg</span>
+            <span>1.06 kg/L</span>
+            <span>{{ result.muscleVolume.toFixed(2) }} L</span>
+          </div>
+          <div class="math-row">
+            <span>🦴 Overig</span>
+            <span>{{ result.otherMass.toFixed(2) }} kg</span>
+            <span>1.0 kg/L</span>
+            <span>{{ result.otherVolume.toFixed(2) }} L</span>
+          </div>
+          <div class="math-row math-total">
+            <span>Totaal</span>
+            <span>{{ userWeight }} kg</span>
+            <span>{{ result.bodyDensity.toFixed(3) }} kg/L</span>
+            <span>{{ result.bodyVolume.toFixed(2) }} L</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="math-block">
+        <h4>Stap 2 — Drijfvermogen</h4>
+        <div class="formula-line">
+          <span class="formula-label">Lichaamsdichtheid</span>
+          <span class="formula-eq">
+            = {{ userWeight }} ÷ {{ result.bodyVolume.toFixed(2) }}
+            = <strong>{{ result.bodyDensity.toFixed(4) }} kg/L</strong>
+          </span>
+        </div>
+        <div class="formula-verdict" [class.sinks]="!result.floatsAlone" [class.floats]="result.floatsAlone">
+          {{ result.bodyDensity.toFixed(4) }} kg/L
+          {{ result.floatsAlone ? '< 1.0 kg/L → drijft ✓' : '> 1.0 kg/L → zinkt al ✓' }}
+        </div>
+      </div>
+
+      <div class="math-block" *ngIf="result.floatsAlone">
+        <h4>Stap 3 — Benodigde stenen</h4>
+        <div class="formula-line">
+          <span class="formula-label">Volume per steen</span>
+          <span class="formula-eq">= {{ rockWeight }} ÷ 1.6 = <strong>{{ result.rockVolume.toFixed(3) }} L</strong></span>
+        </div>
+        <div class="formula-line">
+          <span class="formula-label">Netto bijdrage per steen</span>
+          <span class="formula-eq">
+            = {{ rockWeight }} − {{ result.rockVolume.toFixed(3) }}
+            = <strong>{{ result.netBuoyancyPerRock.toFixed(3) }} kg/L</strong>
+          </span>
+        </div>
+        <p class="formula-note">
+          Elke steen weegt {{ rockWeight }} kg maar verdringt slechts {{ result.rockVolume.toFixed(3) }} L water,
+          waardoor hij per steen {{ result.netBuoyancyPerRock.toFixed(3) }} kg "extra" naar beneden trekt.
+        </p>
+        <div class="formula-line">
+          <span class="formula-label">Tekort (V − M)</span>
+          <span class="formula-eq">
+            = {{ result.bodyVolume.toFixed(3) }} − {{ userWeight }}
+            = <strong>{{ result.deficit.toFixed(3) }} L</strong>
+          </span>
+        </div>
+        <div class="formula-line highlight-line">
+          <span class="formula-label">Stenen nodig</span>
+          <span class="formula-eq">
+            = ⌈{{ result.deficit.toFixed(3) }} ÷ {{ result.netBuoyancyPerRock.toFixed(3) }}⌉
+            = <strong>{{ result.rocksNeeded }}</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <button class="restart-button" (click)="reset()">🔄 Opnieuw Proberen</button>
   </div>
 </div>
